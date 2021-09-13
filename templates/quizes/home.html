@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+<!-- Modal -->
+<div class="modal fade" id="quizStartModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Quiz Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal-body-confirm"></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+        <button type="button" id="start-button" class="btn btn-success">Start Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="h1">Quiz List</div>
+<hr>
+{% for obj in object_list %}
+<button
+class='btn btn-link modal-button'
+data-pk='{{obj.pk}}'
+data-quiz='{{obj.name}}'
+data-topic = '{{obj.topic}}'
+data-questions = '{{obj.number_of_questions}}'
+data-time = '{{obj.time_to_complete}}'
+data-pass = '{{obj.pass_mark}}'
+data-dificulty = '{{obj.dificulty}}'
+data-bs-toggle="modal"
+data-bs-target="#quizStartModal">{{obj.name}}</button>
+{% endfor %}
+
+{% block scripts %}
+    <script>
+      const modalBtns = [...document.getElementsByClassName('modal-button')]
+      const modalBody = document.getElementById('modal-body-confirm')
+      const startBtn  = document.getElementById('start-button')
+      const url = window.location.href
+
+
+      modalBtns.forEach(modalBtn=> modalBtn.addEventListener('click', ()=>{
+        const pk =modalBtn.getAttribute('data-pk')
+        const name=modalBtn.getAttribute('data-quiz')
+        const topic=modalBtn.getAttribute('data-topic')
+        const numOfQuestions=modalBtn.getAttribute('data-questions')
+        const timeToComplete=modalBtn.getAttribute('data-time')
+        const passMark=modalBtn.getAttribute('data-pass')
+        const difficulty=modalBtn.getAttribute('data-dificulty')
+        modalBody.innerHTML = `
+        <div class="h5 mb-3">Are you sure you want to start "<b> ${name}</b>"?</div>
+        <div  class="text-muted">
+           <ul>
+           <li>Topic: <b>${topic}</b></li>
+           <li>No of Questions: <b>${numOfQuestions}</b></li>
+           <li>Time To Complete: <b>${timeToComplete} min</b></li>
+           <li>Pass Mark: <b>${passMark}%</b></li>
+           <li>Dificulty: <b>${difficulty}</b></li>
+           </ul>
+        </div>
+        `
+
+        startBtn.addEventListener('click', ()=>{
+          window.location.href  = url + pk
+        })
+      }))
+    </script>
+{% endblock scripts %}
+
+{% endblock content %}
