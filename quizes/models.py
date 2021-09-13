@@ -23,8 +23,8 @@ class Quiz(models.Model):
     class Meta:
         verbose_name_plural = 'Quizes'
 
-    def __init__(self):
+    def __str__(self):
         return str(self.name)
 
     def get_questions(self):
-        return self.question_set.all()
+        return self.question_set.all()[:self.number_of_questions]
