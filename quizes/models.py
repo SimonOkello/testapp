@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+import random
 # Create your models here.
 
 DIFICULTY_CHOICES = (
@@ -27,4 +28,6 @@ class Quiz(models.Model):
         return str(self.name)
 
     def get_questions(self):
-        return self.question_set.all()[:self.number_of_questions]
+        questions = list(self.question_set.all())
+        random.shuffle(questions)
+        return questions[:self.number_of_questions]
